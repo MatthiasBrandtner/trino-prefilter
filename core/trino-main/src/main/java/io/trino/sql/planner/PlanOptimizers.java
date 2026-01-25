@@ -264,6 +264,7 @@ import io.trino.sql.planner.optimizations.StatsRecordingPlanOptimizer;
 import io.trino.sql.planner.optimizations.TransformQuantifiedComparisonApplyToCorrelatedJoin;
 import io.trino.sql.planner.optimizations.UnaliasSymbolReferences;
 import io.trino.sql.planner.optimizations.WindowFilterPushDown;
+import io.trino.sql.prefilter.PatternRecognitionPrefilterRule;
 
 import java.util.List;
 import java.util.Map;
@@ -414,6 +415,13 @@ public class PlanOptimizers
                                 .addAll(new CanonicalizeExpressions(plannerContext).rules())
                                 .add(new OptimizeRowPattern())
                                 .build()),
+                new IterativeOptimizer(
+                        plannerContext,
+                        ruleStats,
+                        statsCalculator,
+                        costCalculator,
+                        ImmutableSet.of(
+                                new PatternRecognitionPrefilterRule())),
                 new IterativeOptimizer(
                         plannerContext,
                         ruleStats,
