@@ -139,14 +139,11 @@ public class PatternRecognitionPrefilterRule
                 }
                 else {
                     dependentConditions.add(labeledCondition);
-                       // ---- BEGIN Pattern Window Check Pipeline ----
-
-                    // Phase 0: globale Voraussetzung
+                       // ---- Pattern Window Check ----
                     if (primaryOrderBy == null || firstLabel == null || lastLabel == null) {
                         continue;
                     }
 
-                    // Phase 1: nur Vergleiche <= zulassen
                     if (!(conjunct instanceof Comparison cmp)) {
                         continue;
                     }
@@ -154,7 +151,6 @@ public class PatternRecognitionPrefilterRule
                         continue;
                     }
 
-                    // Phase 2: Form: subtract(...) <= constant
                     if (!(cmp.left() instanceof Call subtract)) {
                         continue;
                     }
@@ -162,7 +158,6 @@ public class PatternRecognitionPrefilterRule
                         continue;
                     }
 
-                    // Phase 3: Konstante prüfen
                     if (!(constant.value() instanceof Number)) {
                         continue;
                     }
@@ -172,7 +167,6 @@ public class PatternRecognitionPrefilterRule
                         continue;
                     }
 
-                    // Phase 4: echter Subtract-Operator + 2 Argumente
                     if (!subtract.function().name().getFunctionName().equals("$operator$subtract")) {
                         continue;
                     }
@@ -180,7 +174,6 @@ public class PatternRecognitionPrefilterRule
                     Expression leftExpr = subtract.arguments().get(0);
                     Expression rightExpr = subtract.arguments().get(1);
 
-                    // Phase 5: links / rechts je genau ein Symbol
                     Set<Symbol> leftSymbols = new HashSet<>(SymbolsExtractor.extractAll(leftExpr));
                     Set<Symbol> rightSymbols = new HashSet<>(SymbolsExtractor.extractAll(rightExpr));
 
@@ -191,7 +184,6 @@ public class PatternRecognitionPrefilterRule
                     Symbol leftSymbol = leftSymbols.iterator().next();
                     Symbol rightSymbol = rightSymbols.iterator().next();
 
-                    // Phase 6: Symbol -> Label + ORDER BY Key prüfen
                     IrLabel leftLabel = null;
                     IrLabel rightLabel = null;
 
@@ -232,10 +224,11 @@ public class PatternRecognitionPrefilterRule
                     if (leftLabel == null || rightLabel == null) {
                         continue;
                     }
-                    // Phase 7: Pattern-Semantik: (last.t - first.t) <= w
+
                     if (!leftLabel.equals(lastLabel) || !rightLabel.equals(firstLabel)) {
                         continue;
                     }
+                    // set window size
                     w = Math.max(w, windowSize);
                 }
             }
@@ -243,14 +236,24 @@ public class PatternRecognitionPrefilterRule
 
         System.out.println("=== Independent Conditions ===");
         for (LabeledCondition c : independentConditions) {
+
+            boolean inSubsequence = subsequence.containsAll(c.getReferencedLabels());
+            String tag = inSubsequence ? " [IN SUBSEQ]" : " [OUTSIDE SUBSEQ]";
+
             System.out.println("  " + c.getExpression()
-                    + "   labels=" + c.getReferencedLabels());
+                    + "   labels=" + c.getReferencedLabels()
+                    + tag);
         }
 
         System.out.println("=== Dependent Conditions ===");
         for (LabeledCondition c : dependentConditions) {
+
+            boolean inSubsequence = subsequence.containsAll(c.getReferencedLabels());
+            String tag = inSubsequence ? " [IN SUBSEQ]" : " [OUTSIDE SUBSEQ]";
+
             System.out.println("  " + c.getExpression()
-                    + "   labels=" + c.getReferencedLabels());
+                    + "   labels=" + c.getReferencedLabels()
+                    + tag);
         }
 
         System.out.println("Inferred pattern window size: " + (w >= 0 ? w : "undefined"));
