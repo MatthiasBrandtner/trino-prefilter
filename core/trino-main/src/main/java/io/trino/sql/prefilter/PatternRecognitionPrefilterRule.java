@@ -236,7 +236,6 @@ public class PatternRecognitionPrefilterRule
 
         System.out.println("=== Independent Conditions ===");
         for (LabeledCondition c : independentConditions) {
-
             boolean inSubsequence = subsequence.containsAll(c.getReferencedLabels());
             String tag = inSubsequence ? " [IN SUBSEQ]" : " [OUTSIDE SUBSEQ]";
 
@@ -247,7 +246,6 @@ public class PatternRecognitionPrefilterRule
 
         System.out.println("=== Dependent Conditions ===");
         for (LabeledCondition c : dependentConditions) {
-
             boolean inSubsequence = subsequence.containsAll(c.getReferencedLabels());
             String tag = inSubsequence ? " [IN SUBSEQ]" : " [OUTSIDE SUBSEQ]";
 
