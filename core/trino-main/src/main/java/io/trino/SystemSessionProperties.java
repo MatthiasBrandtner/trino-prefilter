@@ -223,6 +223,7 @@ public final class SystemSessionProperties
     public static final String SPOOLING_ENABLED = "spooling_enabled";
     public static final String DEBUG_ADAPTIVE_PLANNER = "debug_adaptive_planner";
     public static final String SPOOLING_UNSUPPORTED_WARNING = "spooling_unsupported_warning";
+    public static final String ENABLE_PREFILTER_REWRITE = "enable_prefilter_rewrite";
 
     private final List<PropertyMetadata<?>> sessionProperties;
 
@@ -1150,6 +1151,11 @@ public final class SystemSessionProperties
                         "Enable debug information for the adaptive planner",
                         false,
                         true),
+                stringProperty(
+                        ENABLE_PREFILTER_REWRITE,
+                        "Enable MATCH_RECOGNIZE prefilter rewrite and define the subsequence, e.g. A,D",
+                        null,
+                        true),
                 booleanProperty(
                         SPOOLING_UNSUPPORTED_WARNING,
                         "Generate warning when client lacks support for spooling protocol",
@@ -1171,6 +1177,11 @@ public final class SystemSessionProperties
     public static String getExecutionPolicy(Session session)
     {
         return session.getSystemProperty(EXECUTION_POLICY, String.class);
+    }
+
+    public static String getEnablePrefilterRewrite(Session session)
+    {
+        return session.getSystemProperty(ENABLE_PREFILTER_REWRITE, String.class);
     }
 
     public static JoinDistributionType getJoinDistributionType(Session session)

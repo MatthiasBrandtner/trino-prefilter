@@ -256,6 +256,7 @@ import io.trino.sql.planner.optimizations.CheckSubqueryNodesAreRewritten;
 import io.trino.sql.planner.optimizations.DeterminePartitionCount;
 import io.trino.sql.planner.optimizations.IndexJoinOptimizer;
 import io.trino.sql.planner.optimizations.LimitPushDown;
+import io.trino.sql.planner.optimizations.MatchRecognizePrefilterOptimizer;
 import io.trino.sql.planner.optimizations.MetadataQueryOptimizer;
 import io.trino.sql.planner.optimizations.OptimizerStats;
 import io.trino.sql.planner.optimizations.PlanOptimizer;
@@ -264,7 +265,6 @@ import io.trino.sql.planner.optimizations.StatsRecordingPlanOptimizer;
 import io.trino.sql.planner.optimizations.TransformQuantifiedComparisonApplyToCorrelatedJoin;
 import io.trino.sql.planner.optimizations.UnaliasSymbolReferences;
 import io.trino.sql.planner.optimizations.WindowFilterPushDown;
-import io.trino.sql.prefilter.PatternRecognitionPrefilterRule;
 
 import java.util.List;
 import java.util.Map;
@@ -415,13 +415,6 @@ public class PlanOptimizers
                                 .addAll(new CanonicalizeExpressions(plannerContext).rules())
                                 .add(new OptimizeRowPattern())
                                 .build()),
-                new IterativeOptimizer(
-                        plannerContext,
-                        ruleStats,
-                        statsCalculator,
-                        costCalculator,
-                        ImmutableSet.of(
-                                new PatternRecognitionPrefilterRule())),
                 new IterativeOptimizer(
                         plannerContext,
                         ruleStats,
@@ -769,6 +762,7 @@ public class PlanOptimizers
                         ImmutableSet.of(
                                 new RemoveRedundantIdentityProjections(),
                                 new PushDownProjectionsFromPatternRecognition())),
+                new MatchRecognizePrefilterOptimizer(plannerContext),
                 new MetadataQueryOptimizer(plannerContext),
                 new IterativeOptimizer(
                         plannerContext,
