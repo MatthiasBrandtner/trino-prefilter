@@ -1,7 +1,7 @@
 # SP Row Pattern Recognition in Data Processing Systems
 
 In diesem Projekt findet sich eine Umsetzung des Prefilters aus dem Paper High-Performance Row Pattern Recognition Using Joins [1].
-Dieser reduziert die Input-Tabelle vor Aufruf eines MATCH RECOGNIZE Operators.
+Dieser reduziert die Input-Tabelle vor Aufruf eines MATCH RECOGNIZE Operators, sodass der Input verringert wird, aber der Output gleichbleibt.
 
 Die Umsetzung ist ein "proof of concept", da sie in vielerlei Hinsicht im Vergleich zu der im Paper eingeschränkt ist.
 Es handelt sich um eine "eingeschränkte" Version des General Case. Das Pattern darf die Quantifier *, + und Alternation beinhalten, allerdings muss eine Subsequence übergeben werden welche für alle Pattern gültig sein muss (siehe Einschränkungen).
@@ -45,6 +45,7 @@ Wobei 'A,D' mit einer beliebigen Subsequence des Patterns ersetzt werden kann (u
 ## Einschränkungen:
    * Für den Input gelten folgende Einschränkungen:
      * Die Input-Tabelle darf keine Duplikate enthalten (da diese bei der finalen Deduplikation entfernt werden würden) 
+     * Die Input-Tabelle muss Indexe haben 
      
    * Für die Query gelten folgende Einschränkungen:
      * Sie muss entweder eine Pattern-Window Condition beinhalten ODER die Subsequence muss das erste und letzte Pattern Symbol beinhalten
@@ -64,7 +65,7 @@ Wobei 'A,D' mit einer beliebigen Subsequence des Patterns ersetzt werden kann (u
 
 Im Falle eines ungültigen Patterns oder einer ungültigen Query wird der Prefilter nicht angewendet und die Query normal durchgeführt.
 
-Ob der Input Duplikate enthält wird **nicht** kontrolliert. Dies müsste über Verwendung von DISTINCT in der Eingabe sichergestellt werden.
+Ob der Input die Voraussetzungen erfüllt wird **nicht** kontrolliert. Dass der Input keine Duplikate enthält müsste über Verwendung von DISTINCT in der Eingabe sichergestellt werden.
 
 # Benchmark:
 Um die Gültigkeit des Prefilters anhand des Query Plans zu zeigen, werden 3 Queries auf tpch.tiny.orders miteinander verglichen.
@@ -85,7 +86,7 @@ Die Benchmark findet sich um Ordner benchmark und kann mittels
 ausgeführt werden (Trino-Server muss dafür gestartet sein und auf localhost:8080 laufen).
 
 # Bucketized Prefilter:
-Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht integriert werden, da er auf einem alten Fork basierte.
+Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht rechtzeitig integriert werden, da er auf einem alten Fork basierte.
 
 # Quelle:
 [1] Zhu, Erkang, Silu Huang, and Surajit Chaudhuri. *"High-Performance Row Pattern Recognition Using Joins (Technical Report)."* 2022,
