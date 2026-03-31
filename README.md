@@ -85,7 +85,7 @@ Die Benchmark findet sich um Ordner benchmark und kann mittels
 ausgeführt werden (Trino-Server muss dafür gestartet sein und auf localhost:8080 laufen).
 
 # Bucketized Prefilter:
-Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht integriert werden.
+Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht integriert werden, da er auf einem alten Fork basierte.
 
 # Quelle:
 [1] Zhu, Erkang, Silu Huang, and Surajit Chaudhuri. *"High-Performance Row Pattern Recognition Using Joins (Technical Report)."* 2022,
