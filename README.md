@@ -1,20 +1,20 @@
 # SP Row Pattern Recognition in Data Processing Systems
 
 In diesem Projekt findet sich eine Umsetzung des Prefilters aus dem Paper High-Performance Row Pattern Recognition Using Joins [1].
-Dieser reduziert die Input-Tabelle vor Aufruf eines MATCH RECOGNIZE operators mittels Joins.
+Dieser reduziert die Input-Tabelle vor Aufruf eines MATCH RECOGNIZE Operators.
 
-Die Umsetzung ist ein "proof of concept", da sie in vielerlei Hinsicht im Vergleich zu der im Paper eingeschränkt ist (siehe unten).
-
-Die Umsetzung ist eine "eingeschränkte" Version des General Case. Das Pattern darf die Quantifier *, + und Alternation beinhalten, allerdings muss eine Subsequence übergeben werden, welche für alle Pattern gültig sein muss.
+Die Umsetzung ist ein "proof of concept", da sie in vielerlei Hinsicht im Vergleich zu der im Paper eingeschränkt ist.
+Es handelt sich um eine "eingeschränkte" Version des General Case. Das Pattern darf die Quantifier *, + und Alternation beinhalten, allerdings muss eine Subsequence übergeben werden welche für alle Pattern gültig sein muss (siehe Einschränkungen).
  
-Inhaltlich erfolgt die Umsetzung orientiert an Def. 3.7 aus [1], welche in folgende Schritte zerlegt wurde.
-Zunächst wird die Eingabe auf Korrektheit geprüft (kein Vorkommen von PREV/NEXT, gültige Subsequence und Pattern anhand der bei "Einschränkungen" genannten Kriterien).
+# Umsetzung
+Zunächst wird die Eingabe auf Korrektheit geprüft (kein Vorkommen von PREV/NEXT).
+Danach wird die Subsequence und das Pattern mit Hilfe des PatternNFA auf Gültigkeit kontrolliert (anhand der bei Einschränkungen genannten Punkte).
 Danach werden Indepedent und Dependent conditions, sowie (falls vorhanden) die Pattern Window Condition extrahiert.
 
-Der Prefilter wird in folgenden Schritten erzeugt:
-* 1. Pro Subsequence Symbol wird eine Filternode erstellt als seperater Branch im Plantree erstellt, welches die Input Tabelle über independent conditions filtert.
-* 2. Für das erste und letzte Symbol der Subsequence wird im jeweiligen Branch eine Projectnode erstellt, die den primary ORDER BY KEY zu t1 bzw. tk umbenennt 
-* 3. Iterativer Join über alle Branches mit den dependent conditions, die entsprechende Smybole beinhalten, als Joinfilter
+Der Prefilter wird danach (entsprechend Def. 3.7 aus [1]) in folgenden Schritten erzeugt:
+* 1. Pro Subsequence Symbol wird eine Filternode als seperater Branch im Plantree erstellt, welches die Input Tabelle über independent conditions filtert.
+* 2. Für das erste und letzte Symbol der Subsequence wird im jeweiligen Branch eine Projectnode erstellt, die den primary ORDER BY key zu t1 bzw. tk umbenennt 
+* 3. Iterativer Join über alle Branches mit den dependent conditions entsprechender Symbole als Joinfilter
 * 4. Anwendung der f(t1, tk) auf die PlanNode mittels ProjectionNode anhander der im Paper genannten Regeln
 * 5. Finaler Join mit der Input Tabelle mit ts <= t <= te als Joinfilter
 * 6. Deduplikation mittel AggregationNode
@@ -61,11 +61,12 @@ Wobei 'A,D' mit einer beliebigen Subsequence des Patterns ersetzt werden kann (u
 * Für das Pattern (A Z* B*) wäre 'A,B' ungültig, für das Pattern (A Z* B+) wäre 'A,B' gültig.
 
 Im Falle eines ungültigen Patterns oder einer ungültigen Query wird der Prefilter nicht angewendet und die Query normal durchgeführt.
-Ob der Input Duplikate enthält wird nicht kontrolliert und müsste derzeit über Verwendung von DISTINCT in der Eingabe sichergestellt werden.
+
+Ob der Input Duplikate enthält wird **nicht** kontrolliert. Dies müsste über Verwendung von DISTINCT in der Eingabe sichergestellt werden.
 
 # Benchmark:
 Um die Gültigkeit des Prefilters anhand des Query Plans zu zeigen, werden 3 Queries auf tpch.tiny.orders miteinander verglichen.
-Ohne Prefilter (angelehnt an Fig. 1 in [1]), mit manuellem Prefilter per SQL-Rewrite (angelehnt an Fig. 5 in [1]), der vom Skript umgesetzte Prefilter-Plan.
+Ohne Prefilter (angelehnt an Fig. 1 in [1]), mit Prefilter und mit einem manuellem Prefilter als SQL-Rewrite (angelehnt an Fig. 5 in [1]).
 
 Alle 3 Querys nutzen EXPLAIN (TYPE LOGICAL, FORMAT GRAPHVIZ), um eine graphische Ausgabe des Query-Plans (als .svg) zu erstellen.
 
