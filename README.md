@@ -1,7 +1,7 @@
 # SP Row Pattern Recognition in Data Processing Systems
 
 In diesem Projekt findet sich eine Umsetzung des Prefilters aus dem Paper High-Performance Row Pattern Recognition Using Joins [1].
-Dieser reduziert die Input-Tabelle vor Aufruf eines MATCH RECOGNIZE Operators, sodass der Input verringert wird, aber der Output gleichbleibt.
+Dieser soll die Ausführung des MATCH RECOGNIZE Operators erhöhen, in dem die Input-Tabelle vor Ausführung reduziert wird (wobei der Output gleichbleibt).
 
 Die Umsetzung ist ein "proof of concept", da sie in vielerlei Hinsicht im Vergleich zu der im Paper eingeschränkt ist.
 Es handelt sich um eine "eingeschränkte" Version des General Case. Das Pattern darf die Quantifier *, + und Alternation beinhalten, allerdings muss eine Subsequence übergeben werden welche für alle Pattern gültig sein muss (siehe Einschränkungen).
