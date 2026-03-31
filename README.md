@@ -19,7 +19,7 @@ Der Prefilter wird danach (entsprechend Def. 3.7 aus [1]) in folgenden Schritten
 * 3. Iterativer Join über alle Branches mit den dependent conditions entsprechender Symbole als Joinfilter
 * 4. Anwendung der f(t1, tk) auf die PlanNode mittels ProjectionNode anhander der im Paper genannten Regeln
 * 5. Finaler Join mit der Input Tabelle mit ts <= t <= te als Joinfilter
-* 6. Deduplikation mittel AggregationNode
+* 6. Deduplikation mittels AggregationNode
 
 ---
 
