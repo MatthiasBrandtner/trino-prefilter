@@ -34,7 +34,7 @@ Schritt 5 - Beide Kosten werden verglichen und die günstigste Ausführung wird 
 # Probleme
 
 <ol>
-  <li> Testen mit Trino-Dev-Server nicht möglich, aufgrund von fehlendem ANALYZE zur Schätzung von Selektiviten: Schätzt daher immer negativ</li>
+  <li> Testen mit Trino-Dev-Server nicht möglich, aufgrund von fehlendem ANALYZE zur Schätzung von Selektivitäten: Schätzt daher immer negativ</li>
   <li> Einbindung in aktuellste Version nicht vorhanden</li>
   <li> Kostenmodell bisher nur für speziellen Fall, also nur Konkatenationen möglich</li>
 </ol>
