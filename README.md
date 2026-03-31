@@ -8,7 +8,9 @@ Es handelt sich um eine "eingeschränkte" Version des General Case. Das Pattern 
  
 # Umsetzung
 Zunächst wird die Eingabe auf Korrektheit geprüft (kein Vorkommen von PREV/NEXT).
+
 Danach wird die Subsequence und das Pattern mit Hilfe des PatternNFA auf Gültigkeit kontrolliert (anhand der bei Einschränkungen genannten Punkte).
+
 Danach werden Indepedent und Dependent conditions, sowie (falls vorhanden) die Pattern Window Condition extrahiert.
 
 Der Prefilter wird danach (entsprechend Def. 3.7 aus [1]) in folgenden Schritten erzeugt:
