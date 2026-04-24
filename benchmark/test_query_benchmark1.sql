@@ -5,12 +5,8 @@ FROM (
         SELECT
             o.*,
             date_diff('day', DATE '1970-01-01', o.o_orderdate) AS t
-        FROM (
-            SELECT *
-            FROM tpch.tiny.orders
-            ORDER BY o_orderkey
-            LIMIT __ROW_LIMIT__
-        ) o
+        FROM tpch.tiny.orders o
+        WHERE o.o_orderkey <= 3000
     ) base
     MATCH_RECOGNIZE (
         ORDER BY t, o_orderkey

@@ -1,17 +1,28 @@
+WITH base AS (
+    SELECT
+        o.*,
+        date_diff('day', DATE '1970-01-01', o.o_orderdate) AS t
+    FROM tpch.tiny.orders o
+    WHERE o.o_orderkey <= 3000
+),
+ranges AS (
+    SELECT
+        O.t - 365 AS t_s,
+        P.t AS t_e
+    FROM base AS O, base AS P
+    WHERE O.t <= P.t
+      AND O.o_orderstatus = 'O'
+      AND P.o_orderstatus = 'P'
+),
+manual_prefilter AS (
+    SELECT DISTINCT b.*
+    FROM base AS b, ranges AS r
+    WHERE b.t BETWEEN r.t_s AND r.t_e
+)
 SELECT count(*) AS match_count
 FROM (
     SELECT *
-    FROM (
-        SELECT
-            o.*,
-            date_diff('day', DATE '1970-01-01', o.o_orderdate) AS t
-        FROM (
-            SELECT *
-            FROM tpch.tiny.orders
-            ORDER BY o_orderkey
-            LIMIT __ROW_LIMIT__
-        ) o
-    ) base
+    FROM manual_prefilter
     MATCH_RECOGNIZE (
         ORDER BY t, o_orderkey
         MEASURES

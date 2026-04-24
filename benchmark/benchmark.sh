@@ -6,7 +6,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CLI_JAR="${REPO_ROOT}/client/trino-cli/target/trino-cli-478-executable.jar"
 PREFILTER_PROPERTY="enable_prefilter_rewrite"
-SUBSEQUENCE="F,P"
 
 rm -f /tmp/mr_prefilter_bench_*.out /tmp/mr_prefilter_graph_*_raw.out /tmp/mr_prefilter_plan_*.dot
 
@@ -23,7 +22,7 @@ run()
     local query_output rows
     local graph_output
     
-    echo "$1"
+    echo "${name}"
 
     start_ms="$(date +%s%3N)"
 
@@ -50,6 +49,10 @@ run()
     echo "svg (${name}): ${svg_file}"
 }
 
-run prefilter_off "${SCRIPT_DIR}/test_query.sql" ""
-run prefilter_on "${SCRIPT_DIR}/test_query.sql" "${SUBSEQUENCE}"
-run manual_prefilter "${SCRIPT_DIR}/test_query_manual_prefilter.sql" ""
+run prefilter_off "${SCRIPT_DIR}/test_query_benchmark1.sql" ""
+run prefilter_fp "${SCRIPT_DIR}/test_query_benchmark1.sql" "F,P"
+run prefilter_fo "${SCRIPT_DIR}/test_query_benchmark1.sql" "F,O"
+run prefilter_op "${SCRIPT_DIR}/test_query_benchmark1.sql" "O,P"
+run manual_prefilter_fp "${SCRIPT_DIR}/test_query_manual_prefilter_benchmark1_fp.sql" ""
+run manual_prefilter_fo "${SCRIPT_DIR}/test_query_manual_prefilter_benchmark1_fo.sql" ""
+run manual_prefilter_op "${SCRIPT_DIR}/test_query_manual_prefilter_benchmark1_op.sql" ""
