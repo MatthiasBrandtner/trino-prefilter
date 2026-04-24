@@ -85,6 +85,13 @@ Die Benchmark findet sich um Ordner benchmark und kann mittels
 
 ausgeführt werden (Trino-Server muss dafür gestartet sein und auf localhost:8080 laufen).
 
+
+Eine weitere Benchmark-Datei für Laufzeitvergleiche findet sich um Ordner benchmark und kann mittels
+
+	./benchmark2.sh
+    
+ausgeführt werden.
+
 # Bucketized Prefilter
 Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht rechtzeitig integriert werden.
 
