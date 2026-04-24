@@ -23,7 +23,7 @@ Der Prefilter wird danach (entsprechend Def. 3.7 aus [1]) in folgenden Schritten
 
 ---
 
-## Integration in Trino:
+## Integration in Trino
 Das Github ist ein Trino-Fork bei dem 2 neue Klassen im Optimizer ergänzt wurden (eine für den Prefilter und eine für den PatternNFA):
 
     core/trino-main/src/main/java/io/trino/sql/planner/optimizations/MatchRecognizePrefilterOptimizer.java
@@ -35,14 +35,14 @@ Es wurde weiterhin in 2 Klassen kleine Änderungen vorgenommen:
 	core/trino-main/src/main/java/io/trino/sql/planner/PlanOptimizers.java
 
 
-## Ausführung:
+## Ausführung
 Der Prefilter kann mit folgender Session-Property aktiviert werden:
 
      SET SESSION enable_prefilter_rewrite = 'A,D';
 
 Wobei 'A,D' mit einer beliebigen Subsequence des Patterns ersetzt werden kann (unter Beachtung der Einschränkungen).
 
-## Einschränkungen:
+## Einschränkungen
    * Für den Input gelten folgende Einschränkungen:
      * Die Input-Tabelle darf keine Duplikate enthalten (da diese bei der finalen Deduplikation entfernt werden würden) 
      * Die Input-Tabelle muss Indexe haben 
@@ -58,7 +58,7 @@ Wobei 'A,D' mit einer beliebigen Subsequence des Patterns ersetzt werden kann (u
      * Sie muss in der angegeben Reihenfolge im Pattern vorkommen
      * Das Pattern *darf* Alternation oder die Quantifier * und + beinhalten, aber die Subsequence muss für jede Dekomposition des Pattern gültig sein
 
-### Beispiele für gültige Pattern:
+### Beispiele für gültige Pattern
 * Für das Pattern (R Z* B Z* M) wären 'R,M', 'B,M', 'R,B,M' alles gültige subsequences
 * Für das Pattern (A Z* B Z* A) wären 'A,B' und 'B,A' gültig, allerdings 'A,B,A' und 'B' ungültig.
 * Für das Pattern (A Z* B*) wäre 'A,B' ungültig, für das Pattern (A Z* B+) wäre 'A,B' gültig.
@@ -67,7 +67,7 @@ Im Falle eines ungültigen Patterns oder einer ungültigen Query wird der Prefil
 
 Ob der Input die Voraussetzungen erfüllt wird **nicht** kontrolliert. Dass der Input keine Duplikate enthält müsste über Verwendung von DISTINCT in der Eingabe sichergestellt werden.
 
-# Benchmark:
+# Benchmark
 Um die Gültigkeit des Prefilters anhand des Query Plans zu zeigen, werden 3 Queries auf tpch.tiny.orders miteinander verglichen.
 Ohne Prefilter (angelehnt an Fig. 1 in [1]), mit Prefilter und mit einem manuellem Prefilter als SQL-Rewrite (angelehnt an Fig. 5 in [1]).
 
@@ -85,8 +85,11 @@ Die Benchmark findet sich um Ordner benchmark und kann mittels
 
 ausgeführt werden (Trino-Server muss dafür gestartet sein und auf localhost:8080 laufen).
 
-# Bucketized Prefilter:
-Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht rechtzeitig integriert werden, da er auf einem alten Fork basierte.
+# Bucketized Prefilter
+Ein Entwurf des Bucketized Prefilters befindet sich in dem gleichnamigen Ordner, konnte aber zur Abgabe nicht rechtzeitig integriert werden.
 
-# Quelle:
+# Kostenmodell
+Ein Entwurf des Kostenmodells befindet sich in dem Ordner incomplete-cost-model, konnte aber zur Abgabe nicht rechtzeitig integriert werden.
+
+# Quelle
 [1] Zhu, Erkang, Silu Huang, and Surajit Chaudhuri. *"High-Performance Row Pattern Recognition Using Joins (Technical Report)."* 2022,
